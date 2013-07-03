@@ -35,7 +35,7 @@ $.widget( "ui.selectmenu", $.ui.selectmenu, {
 		if ( this.options.disabled ) {
 			return;
 		}
-
+		
 		if ( this.options.popup && this.items ) {
 			var currentItem;
 
@@ -55,6 +55,8 @@ $.widget( "ui.selectmenu", $.ui.selectmenu, {
 				my: "left top" + ( this.menu.offset().top  - currentItem.offset().top + ( this.button.outerHeight() - currentItem.outerHeight() ) / 2 ),
 				at: "left top"
 			} ) );
+						
+			this._on( this.document, this._documentClick );
 
 			this._trigger( "open", event );
 		} else {
