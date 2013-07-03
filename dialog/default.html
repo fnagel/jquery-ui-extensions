@@ -13,12 +13,19 @@
 	<script src="../jqueryui/ui/jquery.ui.resizable.js"></script>
 	<script src="../jqueryui/ui/jquery.ui.button.js"></script>
 	<script src="../jqueryui/ui/jquery.ui.dialog.js"></script>
+	<script src="jquery.ui.dialog.resize.js"></script>
 	<link rel="stylesheet" href="../jqueryui/demos/demos.css">
 	<script>
 	$(function() {
 		$( "#dialog" ).dialog({
 			width: 474
 		});
+		
+		var image = '<img src="../images/dummy-800x600-color730046.jpg" alt="changed image" />';
+		setTimeout( function(){
+			$( "#dialog" ).dialog( "content", image, 820 );	
+			// $( "#dialog" ).html( image );	
+		}, 500 );	
 	});
 	</script>
 </head>
