@@ -10,12 +10,9 @@ What is this?
 ---
 Some script which extend jQuery UI widgets with additional functionality.
 
-*Selectmenu* 
-See the [dialog branch](https://github.com/fnagel/jquery-ui-extensions/tree/selectmenu)
+* [**Selectmenu**](https://github.com/fnagel/jquery-ui-extensions/tree/selectmenu)
 Pop-up style modus for the new Selectmenu widget.
-
-*Selectmenu* 
-See the [dialog branch](https://github.com/fnagel/jquery-ui-extensions/tree/dialog)
+* [**Dialog**](https://github.com/fnagel/jquery-ui-extensions/tree/dialog)
 Animated resize and positioning for the Dialog widget.
 
 
