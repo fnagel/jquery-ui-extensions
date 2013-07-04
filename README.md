@@ -16,7 +16,7 @@ Pop-up style modus for the new Selectmenu widget.
 
 *Selectmenu* 
 See the [dialog branch](https://github.com/fnagel/jquery-ui-extensions/tree/dialog)
-Animated resize and positiong for the Dialog widget.
+Animated resize and positioning for the Dialog widget.
 
 
 
