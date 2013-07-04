@@ -33,12 +33,18 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			that._animateUsing( content );
 		};
 
-		this.element.html(this.options.loadingContent);
+		this.element.html( this.options.loadingContent );
 
+
+		// save sizes to calc diff to new position and size
+		this._oldSize = {
+			width: this.options.width,
+			height: this.options.height
+		};
 		// set and change to new size
 		this._setOptions({
-			width: ( isNaN( width ) ) ? this.options.width : width,
-			height: ( isNaN( height ) ) ? this.options.height: height
+			width: width,
+			height: height
 		});
 
 		// reset position.using mechanism
@@ -49,14 +55,14 @@ $.widget( "ui.dialog", $.ui.dialog, {
 	_animateUsing: function( content ) {
 		var that = this;
 
-		if ( this.options.height + ( this.uiDialog.outerHeight() - this.oldSize.height ) > $( window ).height() ) {
+		if ( this.options.height + ( this.uiDialog.outerHeight() - this._oldSize.height ) > $( window ).height() ) {
 			topPos = $( window ).scrollTop() + 5;
 		} else {
-			topPos = "+=" + ( ( this.oldSize.height - this.options.height ) / 2 );
+			topPos = "+=" + ( ( this._oldSize.height - this.options.height ) / 2 );
 		}
 
 		this.uiDialog.animate({
-			left: "+=" + ( that.oldSize.width - that.options.width ) / 2,
+			left: "+=" + ( that._oldSize.width - that.options.width ) / 2,
 			top: topPos,
 		}, {
 			duration: that.options.animationSpeed,
@@ -71,12 +77,6 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
 	animateSize: function() {
 		var that = this;
-
-		// save sizes to calc diff to new position and size
-		this.oldSize = {
-			width: this.element.outerWidth(),
-			height: this.element.outerHeight()
-		};
 
 		this.element.animate({
 			height: that.options.height,
