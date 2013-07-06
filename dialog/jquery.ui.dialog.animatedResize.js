@@ -36,6 +36,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			that._animateUsing( position, feedback , content );
 		};
 
+		this._setAria( true );
 		this.element.html( this.options.loadingContent );
 
 		// save sizes to calc diff to new position and size
@@ -53,7 +54,6 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		this.options.position.using = originalUsing;
 	},
 
-	// todo: add ARIA
 	_animateUsing: function( position, feedback , content ) {
 		var that = this,
 			newWidth = this._oldSize.width - this.options.width,
@@ -72,6 +72,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			complete: function(){
 				// change content
 				that.element.html( content );
+				that._setAria( false );
 				that._trigger( "resized" );
 			}
 		});
@@ -93,6 +94,14 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		widthElement.animate({
 			width: options.width,
 		}, animateOptions );
+	},
+	
+	_setAria: function( busy ){
+		this.uiDialog.attr({
+			"aria-live": "assertive",
+			"aria-relevant": "additions removals text",
+			"aria-busy": busy
+		});
 	},
 	
 	_size: function() {
