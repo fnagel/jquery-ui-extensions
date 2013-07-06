@@ -16,7 +16,7 @@
 
 $.widget( "ui.dialog", $.ui.dialog, {
 	options: {
-		height: 200, // auto is not allowed with this extenion!
+		height: 200, // auto is not allowed with this extension!
 
 		// extended options
 		animationSpeed: 1000,
@@ -32,8 +32,8 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			originalUsing = this.options.position.using;
 
 		// change position.using mechanism
-		this.options.position.using = function( pos ) {
-			that._animateUsing( content );
+		this.options.position.using = function( position, feedback  ) {
+			that._animateUsing( position, feedback , content );
 		};
 
 		this.element.html( this.options.loadingContent );
@@ -53,21 +53,20 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		this.options.position.using = originalUsing;
 	},
 
-	// todo: add ARIA 
-	// todo: rework topPos calc to make it viewport aware
-	_animateUsing: function( content ) {
-		var that = this;
-
-		if ( this.options.height + ( this.uiDialog.outerHeight() - this._oldSize.height ) > $( window ).height() ) {
-			topPos = $( window ).scrollTop() + 5;
-		} else {
-			topPos = "+=" + ( ( this._oldSize.height - this.options.height ) / 2 );
+	// todo: add ARIA
+	_animateUsing: function( position, feedback , content ) {
+		var that = this,
+			newWidth = this._oldSize.width - this.options.width,
+			newHeight = this._oldSize.height - this.options.height;
+		
+		position.left = ( feedback.target.left + ( feedback.target.width - feedback.element.width + newWidth ) / 2 );
+		position.top = ( feedback.target.top + ( feedback.target.height - feedback.element.height + newHeight ) / 2 );
+		
+		if ( position.top < 0 ) {
+			position.top = 0;
 		}
 
-		this.uiDialog.animate({
-			left: "+=" + ( that._oldSize.width - that.options.width ) / 2,
-			top: topPos,
-		}, {
+		this.uiDialog.animate( position, {
 			duration: that.options.animationSpeed,
 			queue: false,
 			complete: function(){
