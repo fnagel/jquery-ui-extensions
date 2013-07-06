@@ -1,5 +1,5 @@
 /*!
- * jQuery UI Dialog Resize Extension
+ * jQuery UI Dialog AnimatedResize Extension
  *
  * Copyright 2013, Felix Nagel (http://www.felixnagel.com)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -8,12 +8,15 @@
  *
  * Depends:
  *	jquery.ui.dialog.js
+ *
+ * Optional:
+ *	jquery.ui.dialog.contentSize.js
  */
 (function( $ ) {
 
 $.widget( "ui.dialog", $.ui.dialog, {
 	options: {
-		height: 200, // auto is not allowed!
+		height: 200, // auto is not allowed with this extenion!
 
 		// extended options
 		animationSpeed: 1000,
@@ -34,7 +37,6 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		};
 
 		this.element.html( this.options.loadingContent );
-
 
 		// save sizes to calc diff to new position and size
 		this._oldSize = {
@@ -66,30 +68,38 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			top: topPos,
 		}, {
 			duration: that.options.animationSpeed,
+			queue: false,
 			complete: function(){
 				// change content
 				that.element.html( content );
 				that._trigger( "resized" );
-			},
-			queue: false
+			}
 		});
 	},
 
 	animateSize: function() {
-		var that = this;
+		var options = this.options,
+			widthElement = ( options.useContentSize ) ? this.element : this.uiDialog,
+			animateOptions = {
+				duration: options.animationSpeed,
+				queue: false
+			};
 
 		this.element.animate({
-			height: that.options.height,
-		}, {
-			duration: that.options.animationSpeed,
-			queue: false
-		});
-		this.uiDialog.animate({
-			width: that.options.width,
-		}, {
-			duration: that.options.animationSpeed,
-			queue: false
-		});
+			height: options.height,
+		}, animateOptions );
+
+		widthElement.animate({
+			width: options.width,
+		}, animateOptions );
+	},
+
+	_size: function() {
+		if ( this._isVisible ) {
+			this.animateSize();
+		} else {
+			this._super();
+		}
 	},
 
 	_create: function() {
@@ -105,14 +115,6 @@ $.widget( "ui.dialog", $.ui.dialog, {
 	close: function() {
 		this._super();
 		this._isVisible = false;
-	},
-
-	_size: function() {
-		if ( this._isVisible ) {
-			this.animateSize();
-		} else {
-			this._super();
-		}
 	}
 });
 
