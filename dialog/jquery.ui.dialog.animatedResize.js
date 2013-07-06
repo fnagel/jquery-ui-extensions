@@ -19,7 +19,10 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		height: 200, // auto is not allowed with this extension!
 
 		// extended options
-		animationSpeed: 1000,
+		animateOptions: {
+			duration: 1000,
+			queue: false
+		},
 		loadingContent: "loading...",
 
 		// callbacks
@@ -66,34 +69,33 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			position.top = 0;
 		}
 
-		this.uiDialog.animate( position, {
-			duration: that.options.animationSpeed,
-			queue: false,
-			complete: function(){
-				// change content
-				that.element.html( content );
-				that._setAria( false );
-				that._trigger( "resized" );
-			}
-		});
+		this.uiDialog.animate( position, $.extend( {}, 
+			that.options.animateOptions, { 
+				complete: function() {
+					that._animateCompleted( content ) ;
+				}
+			})	
+		);
+	},
+	
+	_animateCompleted: function( content ) {
+		this.element.html( content );
+		this._setAria( false );
+		this._trigger( "resized" );
 	},
 
 	// animated change of the dialog size
 	animateSize: function() {
 		var options = this.options,
-			widthElement = ( options.useContentSize ) ? this.element : this.uiDialog,
-			animateOptions = {
-				duration: options.animationSpeed,
-				queue: false
-			};
+			widthElement = ( options.useContentSize ) ? this.element : this.uiDialog;
 
 		this.element.animate({
 			height: options.height,
-		}, animateOptions );
+		}, options.animateOptions );
 
 		widthElement.animate({
 			width: options.width,
-		}, animateOptions );
+		}, options.animateOptions );
 	},
 	
 	_setAria: function( busy ){
