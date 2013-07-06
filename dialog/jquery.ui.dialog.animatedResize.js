@@ -53,7 +53,8 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		this.options.position.using = originalUsing;
 	},
 
-	// position
+	// todo: add ARIA 
+	// todo: rework topPos calc to make it viewport aware
 	_animateUsing: function( content ) {
 		var that = this;
 
@@ -77,6 +78,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		});
 	},
 
+	// animated change of the dialog size
 	animateSize: function() {
 		var options = this.options,
 			widthElement = ( options.useContentSize ) ? this.element : this.uiDialog,
@@ -93,7 +95,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			width: options.width,
 		}, animateOptions );
 	},
-
+	
 	_size: function() {
 		if ( this._isVisible ) {
 			this.animateSize();
@@ -102,6 +104,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		}
 	},
 
+	// all following functions add a variable to determine if the dialog is visible
 	_create: function() {
 		this._super();
 		this._isVisible = false;
