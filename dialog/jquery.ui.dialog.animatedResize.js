@@ -31,30 +31,20 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
 	// Changes content and resizes dialogs
 	changeContent: function( content, width, height ) {
-		var that = this,
-			originalUsing = this.options.position.using;
+		var that = this;
 
-		this._saveOldSize();
-		this._setAria( true );
+		this._setAriaLive( true );
 		this.element.html( this.options.loadingContent );
+		// set and change to new size
+		this._setOptions({
+			width: width,
+			height: height
+		});
 
-		if ( this._oldSize.width != width || this._oldSize.height != height ) {
-			// change position.using mechanism
-			this.options.position.using = function( position, feedback  ) {
-				that._animateUsing( position, feedback , content );
-			};
-
-			// set and change to new size
-			this._setOptions({
-				width: width,
-				height: height
-			});
-
-			// reset position.using mechanism
-			this.options.position.using = originalUsing;
-		} else {
-			this._animateCompleted( content ) ;
-		}
+		this.element.one( this.widgetEventPrefix + "resized", function() {
+			that.element.html( content );
+			that._setAriaLive( false );
+		});
 	},
 
 	// processes the animated positioning
@@ -62,11 +52,11 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		var that = this,
 			widthDiff = this._oldSize.width - this.options.width,
 			heightDiff = this._oldSize.height - this.options.height;
-				
+
 		// calculate new position based on the viewport
 		position.left = ( feedback.target.left + ( feedback.target.width - feedback.element.width + widthDiff ) / 2 );
 		position.top = ( feedback.target.top + ( feedback.target.height - feedback.element.height + heightDiff ) / 2 );
-		
+
 		if ( position.top < 0 ) {
 			position.top = 0;
 		}
@@ -74,16 +64,10 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		this.uiDialog.animate( position, $.extend( {},
 			that.options.animateOptions, {
 				complete: function() {
-					that._animateCompleted( content ) ;
+					that._trigger( "resized" );
 				}
 			})
 		);
-	},
-
-	_animateCompleted: function( content ) {
-		this.element.html( content );
-		this._setAria( false );
-		this._trigger( "resized" );
 	},
 
 	// animated change of the dialog size
@@ -92,14 +76,14 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			width = options.width,
 			height = options.height,
 			widthElement = this.element;
-	
+
 		// we need to adjust the size as we want to calculate the overall dialog size
 		if ( !options.useContentSize ) {
 			widthElement = this.uiDialog;
 			width -= ( this._oldSize.width - this.element.outerWidth() );
 			height -= ( this._oldSize.height - this.element.height() );
 		}
-		
+
 		this.element.animate({
 			height: height,
 		}, options.animateOptions );
@@ -108,20 +92,34 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		}, options.animateOptions );
 	},
 
-	// save sizes to calc diff to new position and size
-	_saveOldSize: function() {
-		this._oldSize = {
-			width: this.options.width,
-			height: this.options.height
-		};
+	_setOption: function( key, value ) {
+		// save sizes to calc diff to new position and size
+		if ( key === "width" ) {
+			this._oldSize.width = this.options.width;
+		}
+		if ( key === "height" ) {
+			this._oldSize.height = this.options.height;
+		}
+
+		this._super( key, value );
 	},
 
-	_setAria: function( busy ){
-		this.uiDialog.attr({
-			"aria-live": "assertive",
-			"aria-relevant": "additions removals text",
-			"aria-busy": busy
-		});
+	_position: function() {
+		if ( !this._isVisible ) {
+			this._super();
+			return;
+		}
+
+		var that = this,
+			originalUsing = this.options.position.using;
+			
+		// change position.using mechanism
+		this.options.position.using = function( position, feedback  ) {
+			that._animateUsing( position, feedback , content );
+		};
+		this._super();
+		// reset position.using mechanism
+		this.options.position.using = originalUsing;
 	},
 
 	_size: function() {
@@ -131,16 +129,25 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			this._super();
 		}
 	},
+	
+	_setAriaLive: function( busy ){
+		this.uiDialog.attr({
+			"aria-live": "assertive",
+			"aria-relevant": "additions removals text",
+			"aria-busy": busy
+		});
+	},
+
 
 	// all following functions add a variable to determine if the dialog is visible
 	_create: function() {
+		this._oldSize = {};
 		this._super();
 		this._isVisible = false;
 	},
 
 	open: function() {
 		this._super();
-		this._saveOldSize();
 		this._isVisible = true;
 	},
 
