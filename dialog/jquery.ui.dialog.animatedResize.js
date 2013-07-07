@@ -57,13 +57,14 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		}
 	},
 
+	// processes the animated positioning
 	_animateUsing: function( position, feedback , content ) {
 		var that = this,
-			newWidth = this._oldSize.width - this.options.width,
-			newHeight = this._oldSize.height - this.options.height;
+			widthDiff = this._oldSize.width - this.options.width,
+			heightDiff = this._oldSize.height - this.options.height;
 		
-		position.left = ( feedback.target.left + ( feedback.target.width - feedback.element.width + newWidth ) / 2 );
-		position.top = ( feedback.target.top + ( feedback.target.height - feedback.element.height + newHeight ) / 2 );
+		position.left = ( feedback.target.left + ( feedback.target.width - feedback.element.width + widthDiff ) / 2 );
+		position.top = ( feedback.target.top + ( feedback.target.height - feedback.element.height + heightDiff ) / 2 );
 		
 		if ( position.top < 0 ) {
 			position.top = 0;
@@ -86,9 +87,13 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
 	// animated change of the dialog size
 	animateSize: function() {
-		var options = this.options,
+		var options = this.options, 
 			widthElement = ( options.useContentSize ) ? this.element : this.uiDialog;
 
+		if ( !options.useContentSize ) {
+			options.height -= this.uiDialog.outerHeight() - this._oldSize.height;
+		}		
+			
 		this.element.animate({
 			height: options.height,
 		}, options.animateOptions );
