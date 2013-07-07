@@ -33,6 +33,8 @@ $.widget( "ui.dialog", $.ui.dialog, {
 	 * Option width and height normally set the overall dialog dimensions.
 	 * This extensions make these options the dimensions of the content pane.
 	 * This way it's possible to set the real content dimensions.
+	 *
+	 * Copy of the original function but sets width on this.element instead of this.dialog
 	 */
 	_contentSize: function() {
 		// If the user has resized the dialog, the .ui-dialog and .ui-dialog-content
@@ -52,15 +54,9 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			options.width = options.minWidth;
 		}
 
-		// reset wrapper sizing
-		this.element.css({
-			width: options.width
-		});
+		this.element.width( options.width );
 		// determine the height of all the non-content elements
-		nonContentHeight = this.uiDialog.css({
-				height: "auto"
-			})
-			.outerHeight();
+		nonContentHeight = this.uiDialog.height( "auto" ).outerHeight();
 
 		minContentHeight = Math.max( 0, options.minHeight - nonContentHeight );
 		maxContentHeight = typeof options.maxHeight === "number" ?

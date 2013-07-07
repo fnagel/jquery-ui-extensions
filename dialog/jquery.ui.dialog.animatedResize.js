@@ -34,26 +34,26 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		var that = this,
 			originalUsing = this.options.position.using;
 
-		this._saveOldSize();			
+		this._saveOldSize();
 		this._setAria( true );
 		this.element.html( this.options.loadingContent );
 
-		if ( this._oldSize.width != width || this._oldSize.height != height ) {			
+		if ( this._oldSize.width != width || this._oldSize.height != height ) {
 			// change position.using mechanism
 			this.options.position.using = function( position, feedback  ) {
 				that._animateUsing( position, feedback , content );
 			};
-		
+
 			// set and change to new size
 			this._setOptions({
 				width: width,
 				height: height
 			});
-			
+
 			// reset position.using mechanism
 			this.options.position.using = originalUsing;
 		} else {
-			this._animateCompleted( content ) ;		
+			this._animateCompleted( content ) ;
 		}
 	},
 
@@ -62,23 +62,24 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		var that = this,
 			widthDiff = this._oldSize.width - this.options.width,
 			heightDiff = this._oldSize.height - this.options.height;
-		
+
+		// calculate new position based on the viewport
 		position.left = ( feedback.target.left + ( feedback.target.width - feedback.element.width + widthDiff ) / 2 );
 		position.top = ( feedback.target.top + ( feedback.target.height - feedback.element.height + heightDiff ) / 2 );
-		
+
 		if ( position.top < 0 ) {
 			position.top = 0;
 		}
 
-		this.uiDialog.animate( position, $.extend( {}, 
-			that.options.animateOptions, { 
+		this.uiDialog.animate( position, $.extend( {},
+			that.options.animateOptions, {
 				complete: function() {
 					that._animateCompleted( content ) ;
 				}
-			})	
+			})
 		);
 	},
-	
+
 	_animateCompleted: function( content ) {
 		this.element.html( content );
 		this._setAria( false );
@@ -87,13 +88,14 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
 	// animated change of the dialog size
 	animateSize: function() {
-		var options = this.options, 
+		var options = this.options,
 			widthElement = ( options.useContentSize ) ? this.element : this.uiDialog;
 
+		// we need to adjust the height as we want to calculate the overall dialog size
 		if ( !options.useContentSize ) {
 			options.height -= this.uiDialog.outerHeight() - this._oldSize.height;
-		}		
-			
+		}
+
 		this.element.animate({
 			height: options.height,
 		}, options.animateOptions );
@@ -102,15 +104,15 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			width: options.width,
 		}, options.animateOptions );
 	},
-	
+
 	// save sizes to calc diff to new position and size
-	_saveOldSize: function() {		
+	_saveOldSize: function() {
 		this._oldSize = {
 			width: this.options.width,
 			height: this.options.height
 		};
 	},
-	
+
 	_setAria: function( busy ){
 		this.uiDialog.attr({
 			"aria-live": "assertive",
@@ -118,7 +120,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			"aria-busy": busy
 		});
 	},
-	
+
 	_size: function() {
 		if ( this._isVisible ) {
 			this.animateSize();
