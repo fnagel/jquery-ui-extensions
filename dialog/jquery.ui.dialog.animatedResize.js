@@ -34,27 +34,25 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		var that = this,
 			originalUsing = this.options.position.using;
 
-		// change position.using mechanism
-		this.options.position.using = function( position, feedback  ) {
-			that._animateUsing( position, feedback , content );
-		};
-
+		this._saveOldSize();			
 		this._setAria( true );
 		this.element.html( this.options.loadingContent );
 
-		// save sizes to calc diff to new position and size
-		this._oldSize = {
-			width: this.options.width,
-			height: this.options.height
-		};
-		// set and change to new size
-		this._setOptions({
-			width: width,
-			height: height
-		});
-
-		// reset position.using mechanism
-		this.options.position.using = originalUsing;
+		if ( this._oldSize.width != width || this._oldSize.height != height ) {			
+			// change position.using mechanism
+			this.options.position.using = function( position, feedback  ) {
+				that._animateUsing( position, feedback , content );
+			};
+		
+			// set and change to new size
+			this._setOptions({
+				width: width,
+				height: height
+			});
+			
+			// reset position.using mechanism
+			this.options.position.using = originalUsing;
+		}
 	},
 
 	_animateUsing: function( position, feedback , content ) {
@@ -98,6 +96,14 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		}, options.animateOptions );
 	},
 	
+	// save sizes to calc diff to new position and size
+	_saveOldSize: function() {		
+		this._oldSize = {
+			width: this.options.width,
+			height: this.options.height
+		};
+	},
+	
 	_setAria: function( busy ){
 		this.uiDialog.attr({
 			"aria-live": "assertive",
@@ -122,6 +128,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
 	open: function() {
 		this._super();
+		this._saveOldSize();
 		this._isVisible = true;
 	},
 
