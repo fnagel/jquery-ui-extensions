@@ -29,8 +29,8 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		resized: null
 	},
 
-	// Changes content and resizes dialogs
-	changeContent: function( content, width, height ) {
+	// Changes content and resizes dialog
+	change: function( content, width, height ) {
 		var that = this;
 
 		this._setAriaLive( true );
@@ -112,7 +112,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
 		var that = this,
 			originalUsing = this.options.position.using;
-			
+
 		// change position.using mechanism
 		this.options.position.using = function( position, feedback  ) {
 			that._animateUsing( position, feedback , content );
@@ -129,7 +129,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			this._super();
 		}
 	},
-	
+
 	_setAriaLive: function( busy ){
 		this.uiDialog.attr({
 			"aria-live": "assertive",
@@ -137,7 +137,6 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			"aria-busy": busy
 		});
 	},
-
 
 	// all following functions add a variable to determine if the dialog is visible
 	_create: function() {
