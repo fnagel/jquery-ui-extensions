@@ -52,6 +52,8 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			
 			// reset position.using mechanism
 			this.options.position.using = originalUsing;
+		} else {
+			this._animateCompleted( content ) ;		
 		}
 	},
 
