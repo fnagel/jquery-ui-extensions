@@ -13,32 +13,38 @@
 	<script src="../jqueryui/ui/jquery.ui.resizable.js"></script>
 	<script src="../jqueryui/ui/jquery.ui.button.js"></script>
 	<script src="../jqueryui/ui/jquery.ui.dialog.js"></script>
+	<script src="../jqueryui/ui/jquery.ui.effect.js"></script>
+
 	<script src="jquery.ui.dialog.contentSize.js"></script>
 	<script src="jquery.ui.dialog.animatedResize.js"></script>
+
 	<link rel="stylesheet" href="../jqueryui/demos/demos.css">
 	<script>
 	$(function() {
 		$( "#dialog" ).dialog({
-			useContentSize: true,
 			width: 454,
 			height: 280,
 			buttons: {
 				Ok: function(){
-				
+
 				}
+			},
+			useContentSize: true,
+			animateOptions: {
+				easing: "easeOutExpo"
 			}
 		});
-		
+
 		setTimeout( function(){
-			$( "#dialog" ).dialog( "changeContent", '<img src="../images/dummy-800x600-color730046.jpg" alt="changed image" />', 800, 600 );	
-		}, 1000 );	
+			$( "#dialog" ).dialog( "changeContent", '<img src="../images/dummy-800x600-color730046.jpg" alt="changed image" />', 800, 600 );
+		}, 1000 );
 		setTimeout( function(){
-			$( "#dialog" ).dialog( "changeContent", '<img src="../images/dummy-500x375-colorE88801.jpg" alt="changed image" />', 500, 375 );	
-		}, 3000 );	
+			$( "#dialog" ).dialog( "changeContent", '<img src="../images/dummy-500x375-colorE88801.jpg" alt="changed image" />', 500, 375 );
+		}, 3000 );
 		setTimeout( function(){
-			$( "#dialog" ).dialog( "changeContent", '<img src="../images/dummy-454x280-colorFFC200.jpg" alt="image" />', 454, 280 );	
-		}, 5000 );	
-		/*		
+			$( "#dialog" ).dialog( "changeContent", '<img src="../images/dummy-454x280-colorFFC200.jpg" alt="image" />', 454, 280 );
+		}, 5000 );
+		/*
 		*/
 	});
 	</script>

@@ -20,7 +20,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
 		// extended options
 		animateOptions: {
-			duration: 1000,
+			duration: 500,
 			queue: false
 		},
 		loadingContent: "loading...",
