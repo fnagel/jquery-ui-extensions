@@ -19,6 +19,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		height: 200, // auto is not allowed with this extension!
 
 		// extended options
+		enableAnimation: true,
 		animateOptions: {
 			duration: 500,
 			queue: false
@@ -70,25 +71,18 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		);
 	},
 
-	// animated change of the dialog size
-	animateSize: function() {
+	_animateSize: function() {
 		var options = this.options,
 			width = options.width,
-			height = options.height,
-			widthElement = this.element;
+			// height is overall size, we need content size
+			height = options.height - ( this._oldSize.height - this.element.height() );
 
-		// we need to adjust the size as we want to calculate the overall dialog size
-		if ( !options.useContentSize ) {
-			widthElement = this.uiDialog;
-			width -= ( this._oldSize.width - this.element.outerWidth() );
-			height -= ( this._oldSize.height - this.element.height() );
-		}
+		this.uiDialog.animate({
+			width: width,
+		}, options.animateOptions );
 
 		this.element.animate({
 			height: height,
-		}, options.animateOptions );
-		widthElement.animate({
-			width: width,
 		}, options.animateOptions );
 	},
 
@@ -105,7 +99,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 	},
 
 	_position: function() {
-		if ( !this._isVisible ) {
+		if ( !this._isVisible || !this.options.enableAnimation ) {
 			this._super();
 			return;
 		}
@@ -123,8 +117,8 @@ $.widget( "ui.dialog", $.ui.dialog, {
 	},
 
 	_size: function() {
-		if ( this._isVisible ) {
-			this.animateSize();
+		if ( this._isVisible && this.options.enableAnimation ) {
+			this._animateSize();
 		} else {
 			this._super();
 		}
