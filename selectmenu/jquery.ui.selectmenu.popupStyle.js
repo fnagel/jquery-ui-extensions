@@ -31,37 +31,24 @@ $.widget( "ui.selectmenu", $.ui.selectmenu, {
 		}
 	},
 
-	open: function( event ) {
-		if ( this.options.disabled ) {
-			return;
-		}
-		
-		if ( this.options.popup && this.items ) {
-			var currentItem;
-
-			this.isOpen = true;
-			this._toggleAttr();
-
-			currentItem = this._getSelectedItem();
-			// center current item
-			if ( this.menu.outerHeight() < this.menu.prop( "scrollHeight" ) ) {
-				this.menuWrap.css( "left" , -10000 );
-				this.menu.scrollTop( this.menu.scrollTop() + currentItem.position().top - this.menu.outerHeight() / 2 + currentItem.outerHeight() / 2 );
-				this.menuWrap.css( "left" , "auto" );
-			}
-
-			this.menuWrap.position( $.extend( {}, this.options.position, {
-				of: this.button,
-				my: "left top" + ( this.menu.offset().top  - currentItem.offset().top + ( this.button.outerHeight() - currentItem.outerHeight() ) / 2 ),
-				at: "left top"
-			} ) );
-						
-			this._on( this.document, this._documentClick );
-
-			this._trigger( "open", event );
-		} else {
+	_position: function() {
+		if ( !this.options.popup ) {
 			this._super();
 		}
+		
+		currentItem = this._getSelectedItem();
+		// center current item
+		if ( this.menu.outerHeight() < this.menu.prop( "scrollHeight" ) ) {
+			this.menuWrap.css( "left" , -10000 );
+			this.menu.scrollTop( this.menu.scrollTop() + currentItem.position().top - this.menu.outerHeight() / 2 + currentItem.outerHeight() / 2 );
+			this.menuWrap.css( "left" , "auto" );
+		}
+
+		this.menuWrap.position( $.extend( {}, this.options.position, {
+			of: this.button,
+			my: "left top" + ( this.menu.offset().top  - currentItem.offset().top + ( this.button.outerHeight() - currentItem.outerHeight() ) / 2 ),
+			at: "left top"
+		} ) );
 	},
 
 	_toggleAttr: function(){
