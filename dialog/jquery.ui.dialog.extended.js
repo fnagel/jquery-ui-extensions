@@ -68,36 +68,34 @@ $.widget( "ui.dialog", $.ui.dialog, {
 	
 	_setOption: function( key, value ) {
 		// we need to adjust the size as we need to set the overall dialog size
-		if ( this.options.useContentSize && this.options.useAnimation ) {
-			if ( key === "width" ) {
-				value += ( this.uiDialog.width() - this.element.width() );
+		if ( this.options.useAnimation ) {
+			if ( this.options.useContentSize ) {
+				if ( key === "width" ) {
+					value = value + ( this.uiDialog.width() - this.element.width() );
+				}
+				if ( key === "height" ) {
+					value = value + ( this.uiDialog.outerHeight() - this.element.height() );
+				}
 			}
-			// if ( key === "height" ) {
-				// value += ( this.uiDialog.height() - this.element.height() );
+
+			// overwrite options with recaluclated dimensions
+			// var data = {};
+			// if ( key === "width" || key === "height" ) {	
+				// data[ key ] = value;
+				// $.extend( this.options, this._getSize( $.extend( this.options, data ) ) );
 			// }
+				
+			// save sizes to calc diff to new position and size
+			if ( key === "width" ) {
+				this._oldSize.width = this.options.width;
+			}
+			if ( key === "height" ) {
+				this._oldSize.height = this.options.height;
+			}
 		}
-
-		// overwrite options with recaluclated dimensions
-		// var data = {};
-		// if ( key === "width" || key === "height" ) {	
-			// data[ key ] = value;
-			// $.extend( this.options, this._getSize( $.extend( this.options, data ) ) );
-		// }
-			
-		// save sizes to calc diff to new position and size
-		if ( key === "width" ) {
-			this._oldSize.width = this.options.width;
-		}
-		if ( key === "height" ) {
-			this._oldSize.height = this.options.height;
-		}
-
-		console.log("save size " + this.options.width + "x" + this.options.height );	
 		
-	
-		this._super( key, value );
+		this._super( key, value );	
 	},
-	
 	
 	_getSize: function( data ) {
 		var options = this.options,
@@ -198,10 +196,11 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			this.uiDialog.resizable( "option", "minHeight", this._minHeight() );
 		}
 		
-		// save real calculated width
-		// options.width = options.width + nonContentWidth;
-		// options.width = this.uiDialog.outerWidth();
-		// options.height = this.uiDialog.outerHeight();
+		// save calculated overall size
+		options.width = options.width + nonContentWidth;
+		options.height = options.height + nonContentHeight;
+		
+		console.log("initial " + options.width + "x" + options.height );
 	},
 
 	// Processes the animated positioning (position using callbacl), works with any width and height options
@@ -227,14 +226,16 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		);
 	},
 
-	// animated the size, uses width an height options like default dialog widget
+	// animated the size, uses width and height options like default dialog widget (overall size)
 	_animateSize: function() {
-		console.log("_animateSize " + this.options.width + "x" + this.options.height );
+		console.log("_animateSize saveOld " + this._oldSize.width + "x" + this._oldSize.height );
+		console.log("_animateSize current " + this.options.width + "x" + this.options.height );
 		var options = this.options,
 			width = options.width,
 			// options.height is overall size, we need content size
-			height = options.height - ( this._oldSize.height - this.element.height() );
+			height = options.height - ( this.uiDialog.outerHeight() - this.element.height() );
 
+		console.log("_animateSize setter " + width + "x" + height );
 		this.uiDialog.animate({
 			width: width,
 		}, options.animateOptions );
@@ -242,8 +243,8 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		this.element.animate({
 			height: height,
 		}, options.animateOptions );
-	},
-
+	},	
+	
 	// position overwrite for animated positioning
 	_position: function() {
 		if ( !this.options.useAnimation || !this._isVisible ) {
