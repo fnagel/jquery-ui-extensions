@@ -43,6 +43,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		forceFullscreen: false,
 		resizeOnWindowResize: false,
 		resizeAccordingToViewport: true,
+		resizeToBestPossibleSize: true,
 		
 		// width and height set the content size, not overall size
 		useContentSize: false,
@@ -82,6 +83,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		});
 	},
 	
+	// todo: perhaps its possible to use _setOption again and super use _setOptions for _getSize only
 	_setOptions: function( newOptions ) {
 		var that = this,
 			options = this.options,
@@ -133,8 +135,8 @@ $.widget( "ui.dialog", $.ui.dialog, {
 	
 	_getSize: function( data ) {
 		var options = this.options,
-			// portrait = ( data.height >= data.width ) ? true : false,
 			feedback = $.position.getWithinInfo( options.position.of ),
+			portrait = ( feedback.height >= feedback.width ) ? true : false,
 			fullscreen = {
 				width: feedback.width,
 				height: feedback.height
@@ -144,8 +146,15 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			return fullscreen;
 		}
 		
+		if ( options.resizeToBestPossibleSize ) {
+			if ( portrait ) {
+				data = this._calcSize( data, feedback.height, "height", "width" );			
+			} else {
+				data = this._calcSize( data, feedback.height, "height", "width" );
+			}		
+		}		
 		
-		if ( options.resizeAccordingToViewport ) {
+		if ( options.resizeAccordingToViewport && !options.resizeToBestPossibleSize ) {
 			if ( feedback.width < data.width ) {
 				console.log("viewport < width");
 				data = this._calcSize( data, feedback.width, "width", "height" );
@@ -154,8 +163,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 				console.log("viewport < height");
 				data = this._calcSize( data, feedback.height, "height", "width" );
 			}
-		}
-		
+		}		
 		
 		return data;
 	},
