@@ -11,6 +11,22 @@
  */
 (function( $ ) {
 
+var sizeRelatedOptions = {
+		buttons: true,
+		height: true,
+		maxHeight: true,
+		maxWidth: true,
+		minHeight: true,
+		minWidth: true,
+		width: true
+	},
+	resizableRelatedOptions = {
+		maxHeight: true,
+		maxWidth: true,
+		minHeight: true,
+		minWidth: true
+	};
+	
 /*
  * Option width and height normally set the overall dialog dimensions.
  * This extensions make these options the dimensions of the content pane.
@@ -23,8 +39,8 @@ $.widget( "ui.dialog", $.ui.dialog, {
 	options: {
 		height: 200, // auto is not allowed when using animation
 
-		// extended options
-		forceFullscreen: true,
+		// viewport settings
+		forceFullscreen: false,
 		resizeOnWindowResize: false,
 		resizeAccordingToViewport: true,
 		
@@ -66,57 +82,78 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		});
 	},
 	
-	_setOption: function( key, value ) {
-		// we need to adjust the size as we need to set the overall dialog size
-		if ( this.options.useAnimation ) {
-			if ( this.options.useContentSize ) {
+	_setOptions: function( newOptions ) {
+		var that = this,
+			options = this.options,
+			resize = false,
+			resizableOptions = {};
+
+		$.each( newOptions, function( key, value ) {	
+			if ( key in sizeRelatedOptions ) {
+				resize = true;
+			}
+			if ( key in resizableRelatedOptions ) {
+				resizableOptions[ key ] = value;
+			}
+			
+			if ( resize ) {
+				// we need to adjust the size as we need to set the overall dialog size
+				if ( options.useAnimation && options.useContentSize ) {
+					if ( key === "width" ) {
+						value = value + ( that.uiDialog.width() - that.element.width() );
+					}
+					if ( key === "height" ) {
+						value = value + ( that.uiDialog.outerHeight() - that.element.height() );
+					}			
+				}
+							
+				// save sizes to calc diff to new position and size
 				if ( key === "width" ) {
-					value = value + ( this.uiDialog.width() - this.element.width() );
+					that._oldSize.width = options.width;
 				}
 				if ( key === "height" ) {
-					value = value + ( this.uiDialog.outerHeight() - this.element.height() );
-				}
-			}
+					that._oldSize.height = options.height;
+				}			
+			}			
+			
+			that._setOption( key, value );
+		});
 
-			// overwrite options with recaluclated dimensions
-			// var data = {};
-			// if ( key === "width" || key === "height" ) {	
-				// data[ key ] = value;
-				// $.extend( this.options, this._getSize( $.extend( this.options, data ) ) );
-			// }
-				
-			// save sizes to calc diff to new position and size
-			if ( key === "width" ) {
-				this._oldSize.width = this.options.width;
-			}
-			if ( key === "height" ) {
-				this._oldSize.height = this.options.height;
-			}
+		if ( resize ) {		
+			// overwrite options with recalculated dimensions
+			$.extend( options, this._getSize( options ) );
+			
+			this._size();
+			this._position();
 		}
-		
-		this._super( key, value );	
+		if ( this.uiDialog.is(":data(ui-resizable)") ) {
+			this.uiDialog.resizable( "option", resizableOptions );
+		}
 	},
 	
 	_getSize: function( data ) {
 		var options = this.options,
-			portrait = ( data.height >= data.width ) ? true : false,
-			feedback = $.position.getWithinInfo( options.position.of );
-					
-		if ( options.forceFullscreen ) {
-			console.log(feedback);
-			return {
+			// portrait = ( data.height >= data.width ) ? true : false,
+			feedback = $.position.getWithinInfo( options.position.of ),
+			fullscreen = {
 				width: feedback.width,
 				height: feedback.height
 			};
+					
+		if ( options.forceFullscreen ) {
+			return fullscreen;
 		}
 		
-		if ( feedback.width < data.width ) {
-			console.log("viewport < width");
-			data = this._calcSize( data, feedback.width, "width", "height" );
-		}
-		if ( feedback.height < data.height ) {
-			console.log("viewport < height");
-			data = this._calcSize( data, feedback.height, "height", "width" );
+		
+		if ( options.resizeAccordingToViewport ) {
+			if ( feedback.width < data.width ) {
+				console.log("viewport < width");
+				data = this._calcSize( data, feedback.width, "width", "height" );
+			}
+			if ( feedback.height < data.height ) {
+				console.log("viewport < height");
+				data = this._calcSize( data, feedback.height, "height", "width" );
+			}
 		}
 		
 		
@@ -230,6 +267,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 	_animateSize: function() {
 		console.log("_animateSize saveOld " + this._oldSize.width + "x" + this._oldSize.height );
 		console.log("_animateSize current " + this.options.width + "x" + this.options.height );
+		
 		var options = this.options,
 			width = options.width,
 			// options.height is overall size, we need content size
