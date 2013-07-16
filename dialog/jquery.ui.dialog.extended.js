@@ -147,7 +147,6 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		}
 		
 		if ( options.resizeToBestPossibleSize ) {
-			console.log("resizeToBestPossibleSize");
 			if ( portrait ) {
 				data = this._calcSize( data, feedback.height, "height", "width" );			
 			} else {
@@ -157,11 +156,9 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		
 		if ( options.resizeAccordingToViewport && !options.resizeToBestPossibleSize ) {
 			if ( feedback.width < data.width ) {
-				console.log("viewport < width");
 				data = this._calcSize( data, feedback.width, "width", "height" );
 			}
 			if ( feedback.height < data.height ) {
-				console.log("viewport < height");
 				data = this._calcSize( data, feedback.height, "height", "width" );
 			}
 		}		
@@ -245,8 +242,6 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		// save calculated overall size
 		options.width = options.width + nonContentWidth;
 		options.height = options.height + nonContentHeight;
-		
-		console.log("initial " + options.width + "x" + options.height );
 	},
 
 	// Processes the animated positioning (position using callbacl), works with any width and height options
@@ -274,15 +269,11 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
 	// animated the size, uses width and height options like default dialog widget (overall size)
 	_animateSize: function() {
-		console.log("_animateSize saveOld " + this._oldSize.width + "x" + this._oldSize.height );
-		console.log("_animateSize current " + this.options.width + "x" + this.options.height );
-		
 		var options = this.options,
 			width = options.width,
 			// options.height is overall size, we need content size
 			height = options.height - ( this.uiDialog.outerHeight() - this.element.height() );
 
-		console.log("_animateSize setter " + width + "x" + height );
 		this.uiDialog.animate({
 			width: width,
 		}, options.animateOptions );
@@ -322,23 +313,27 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
 	// all following functions add a variable to determine if the dialog is visible
 	_create: function() {
+		var that = this;
 		this._oldSize = {};
 		this._super();
 		this._isVisible = false;
 		
+		// rework this to make sure we have only a single call when resized
 		// make dialog responsive
 		if ( this.options.resizeOnWindowResize ) {
-			$( window ).bind( "resize." + this.widgetName, function( event ){
-				if ( that.isOpen ) {
-					that._delay( function() {
-						// size = that._getSize( that.options );						
-						// that._setOptions({
-							// width: that.options.width,
-							// height: that.options.height
-						// });
-							
-						// $.ui.dialog.overlay.resize();
-					}, 250 );
+			this._on( window, {
+				resize: function( event ){
+					if ( that._isVisible ) {
+						that._delay( function() {	
+							console.log("resized");
+							that._isVisible = false;
+							that._setOptions({
+								width: that.options.width,
+								height: that.options.height
+							});
+							that._isVisible = true;
+						}, 250 );
+					}
 				}
 			});
 		}
