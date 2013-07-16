@@ -10,22 +10,6 @@
  *	jquery.ui.dialog.js
  */
 (function( $ ) {
-
-var sizeRelatedOptions = {
-		buttons: true,
-		height: true,
-		maxHeight: true,
-		maxWidth: true,
-		minHeight: true,
-		minWidth: true,
-		width: true
-	},
-	resizableRelatedOptions = {
-		maxHeight: true,
-		maxWidth: true,
-		minHeight: true,
-		minWidth: true
-	};
 	
 /*
  * Option width and height normally set the overall dialog dimensions.
@@ -43,7 +27,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		forceFullscreen: false,
 		resizeOnWindowResize: false,
 		resizeAccordingToViewport: true,
-		resizeToBestPossibleSize: true,
+		resizeToBestPossibleSize: false,
 		
 		// width and height set the content size, not overall size
 		useContentSize: false,
@@ -85,52 +69,36 @@ $.widget( "ui.dialog", $.ui.dialog, {
 	
 	// todo: perhaps its possible to use _setOption again and super use _setOptions for _getSize only
 	_setOptions: function( newOptions ) {
+		this._super( newOptions );
+			
+		// overwrite options with recalculated dimensions
+		$.extend( this.options, this._getSize( this.options ) );
+	},
+	
+	// todo: perhaps its possible to use _setOption again and super use _setOptions for _getSize only
+	_setOption: function( key, value ) {
 		var that = this,
-			options = this.options,
-			resize = false,
-			resizableOptions = {};
+			options = this.options;
 
-		$.each( newOptions, function( key, value ) {	
-			if ( key in sizeRelatedOptions ) {
-				resize = true;
+		// we need to adjust the size as we need to set the overall dialog size
+		if ( options.useAnimation && options.useContentSize ) {
+			if ( key === "width" ) {
+				value = value + ( that.uiDialog.width() - that.element.width() );
 			}
-			if ( key in resizableRelatedOptions ) {
-				resizableOptions[ key ] = value;
-			}
-			
-			if ( resize ) {
-				// we need to adjust the size as we need to set the overall dialog size
-				if ( options.useAnimation && options.useContentSize ) {
-					if ( key === "width" ) {
-						value = value + ( that.uiDialog.width() - that.element.width() );
-					}
-					if ( key === "height" ) {
-						value = value + ( that.uiDialog.outerHeight() - that.element.height() );
-					}			
-				}
-							
-				// save sizes to calc diff to new position and size
-				if ( key === "width" ) {
-					that._oldSize.width = options.width;
-				}
-				if ( key === "height" ) {
-					that._oldSize.height = options.height;
-				}			
+			if ( key === "height" ) {
+				value = value + ( that.uiDialog.outerHeight() - that.element.height() );
 			}			
-			
-			that._setOption( key, value );
-		});
-
-		if ( resize ) {		
-			// overwrite options with recalculated dimensions
-			$.extend( options, this._getSize( options ) );
-			
-			this._size();
-			this._position();
 		}
-		if ( this.uiDialog.is(":data(ui-resizable)") ) {
-			this.uiDialog.resizable( "option", resizableOptions );
+					
+		// save sizes to calc diff to new position and size
+		if ( key === "width" ) {
+			that._oldSize.width = options.width;
 		}
+		if ( key === "height" ) {
+			that._oldSize.height = options.height;
+		}
+		
+		this._super( key, value );
 	},
 	
 	_getSize: function( data ) {
@@ -324,12 +292,15 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			this._on( window, {
 				resize: function( event ){
 					if ( that._isVisible ) {
-						that._delay( function() {	
+						clearTimeout( that.resizeTimeout );
+						that.resizeTimeout = that._delay( function() {
 							console.log("resized");
 							that._isVisible = false;
 							that._setOptions({
 								width: that.options.width,
 								height: that.options.height
+								// width: that._oldSize.width,
+								// height: that._oldSize.height
 							});
 							that._isVisible = true;
 						}, 250 );
