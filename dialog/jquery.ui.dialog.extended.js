@@ -147,6 +147,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		}
 		
 		if ( options.resizeToBestPossibleSize ) {
+			console.log("resizeToBestPossibleSize");
 			if ( portrait ) {
 				data = this._calcSize( data, feedback.height, "height", "width" );			
 			} else {
@@ -344,6 +345,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 	},
 
 	open: function() {
+		$.extend( this.options, this._getSize( this.options ) );
 		this._super();
 		this._isVisible = true;
 	},
