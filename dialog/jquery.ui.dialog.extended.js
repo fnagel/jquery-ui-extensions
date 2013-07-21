@@ -10,13 +10,13 @@
  *	jquery.ui.dialog.js
  */
 (function( $ ) {
-	
+
 /*
  * Option width and height normally set the overall dialog dimensions.
  * This extensions make these options the dimensions of the content pane.
  * This way it's possible to set the real content dimensions.
  *
- * Please note you won't get the original size but the calculated overall size 
+ * Please note you won't get the original size but the calculated overall size
  * when using the width and height option getter.
  */
 $.widget( "ui.dialog", $.ui.dialog, {
@@ -28,10 +28,10 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		resizeOnWindowResize: false,
 		resizeAccordingToViewport: true,
 		resizeToBestPossibleSize: false,
-		
+
 		// width and height set the content size, not overall size
 		useContentSize: false,
-		
+
 		// animated options
 		useAnimation: true,
 		animateOptions: {
@@ -43,7 +43,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		// callbacks
 		resized: null
 	},
-	
+
 	// Changes content and resizes dialog
 	change: function( content, width, height ) {
 		var that = this;
@@ -55,30 +55,18 @@ $.widget( "ui.dialog", $.ui.dialog, {
 				.one( this.widgetEventPrefix + "resized", function() {
 					that.element.html( content );
 					that.setAriaLive( false );
-				});	
+				});
 		} else {
-			this.element.html( content );	
+			this.element.html( content );
 		}
-		
+
 		// set and change to new size
 		this._setOptions({
 			width: width,
 			height: height
 		});
 	},
-	
-	_setOptions: function( newOptions ) {								
-		// save sizes to calc diff to new position and size
-		this._oldSize.width = this.options.width;
-		this._oldSize.height = this.options.height;
-		
-		this._super( newOptions );
-		
-		// overwrite options with recalculated dimensions
-		// $.extend( this.options, this._getSize( this.options ) );
-	},
-	
-	// todo: perhaps its possible to use _setOption again and super use _setOptions for _getSize only
+
 	_setOption: function( key, value ) {
 		var that = this,
 			options = this.options;
@@ -90,12 +78,12 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			}
 			if ( key === "height" ) {
 				value = value + ( that.uiDialog.outerHeight() - that.element.height() );
-			}			
+			}
 		}
-		
+
 		this._super( key, value );
 	},
-	
+
 	_getSize: function( data ) {
 		var options = this.options,
 			feedback = $.position.getWithinInfo( options.position.of ),
@@ -104,59 +92,56 @@ $.widget( "ui.dialog", $.ui.dialog, {
 				width: feedback.width,
 				height: feedback.height
 			};
-					
+
 		if ( options.forceFullscreen ) {
 			return fullscreen;
 		}
-		
+
 		if ( options.resizeToBestPossibleSize ) {
 			if ( portrait ) {
-				data = this._calcSize( data, feedback.height, "height", "width" );			
+				data = this._calcSize( data, feedback.height, "height", "width" );
 			} else {
 				data = this._calcSize( data, feedback.height, "height", "width" );
-			}		
-			
+			}
+
 			return data;
-		}		
-		
-		// console.log("before " + data.width + "x" + data.height);
+		}
+
 		if ( options.resizeAccordingToViewport ) {
 			if ( feedback.width < data.width ) {
 				data = this._calcSize( data, feedback.width, "width", "height" );
 			}
 			if ( feedback.height < data.height ) {
-				// console.log("test " + feedback.height);
 				data = this._calcSize( data, feedback.height, "height", "width" );
 			}
-		}		
-		// console.log("after " + data.width + "x" + data.height);
-		
+		}
+
 		return data;
 	},
-	
+
 	_calcSize: function( data, value, sortBy, toSort ) {
 		var newData = {};
-		
+
 		newData[ toSort ] = ( data[ toSort ] / data[ sortBy ] ) * value;
 		newData[ sortBy ] = value;
-	
+
 		return newData;
 	},
 
 	_size: function() {
-		// overwrite options with recalculated dimensions		
+		// overwrite options with recalculated dimensions
 		$.extend( this.options, this._getSize( this.options ) );
-	
+
 		if ( this._isVisible && this.options.useAnimation ) {
 			this._animateSize();
 			return;
 		}
-		
+
 		if ( this.options.useContentSize ) {
 			this._contentSize();
 			return;
 		}
-		
+
 		this._super();
 	},
 
@@ -209,69 +194,63 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		if (this.uiDialog.is(":data(ui-resizable)") ) {
 			this.uiDialog.resizable( "option", "minHeight", this._minHeight() );
 		}
-		
+
 		// save calculated overall size
 		options.width = options.width + nonContentWidth;
 		options.height = options.height + nonContentHeight;
 	},
 
-	// Processes the animated positioning (position using callbacl), works with any width and height options
-	_animateUsing: function( position, feedback , content ) {
-		var that = this,
-			widthDiff = this._oldSize.width - this.options.width,
-			heightDiff = this._oldSize.height - this.options.height;
+	// Processes the animated positioning (position using callback), works with any width and height options
+	_animateUsing: function( position, data, content ) {
+		var that = this;
 
 		// calculate new position based on the viewport
-		position.left = ( feedback.target.left + ( feedback.target.width - feedback.element.width + widthDiff ) / 2 );
-		position.top = ( feedback.target.top + ( feedback.target.height - feedback.element.height + heightDiff ) / 2 );
+		position.left = ( data.target.left + ( data.target.width - data.element.width + ( data.element.width - this.options.width ) ) / 2 );
+		position.top = ( data.target.top + ( data.target.height - data.element.height + ( data.element.height - this.options.height ) ) / 2 );
 
 		if ( position.top < 0 ) {
 			position.top = 0;
 		}
 
-		this.uiDialog.animate( position, $.extend( {},
-			that.options.animateOptions, {
-				complete: function() {
-					that._trigger( "resized" );
-				}
-			})
-		);
+		this.uiDialog.animate( position, $.extend( {}, this.options.animateOptions, {
+			complete: function() {
+				that._trigger( "resized" );
+			}
+		}));
 	},
 
 	// animated the size, uses width and height options like default dialog widget (overall size)
 	_animateSize: function() {
-		console.log("_animateSize height in " + this.options.height);
-		var options = this.options,
-			width = options.width,
-			// options.height is overall size, we need content size
-			height = options.height - ( this.uiDialog.outerHeight() - this.element.height() );
+		var options = this.options;
 
 		this.uiDialog.animate({
-			width: width,
+			width: options.width
 		}, options.animateOptions );
 
 		this.element.animate({
-			height: height,
+			// options.height is overall size, we need content size
+			height: options.height - ( this.uiDialog.outerHeight() - this.element.height() )
 		}, options.animateOptions );
-	},	
-	
+	},
+
 	// position overwrite for animated positioning
 	_position: function() {
-		if ( !this.options.useAnimation || !this._isVisible ) {
+		var that = this,
+			options = this.options,
+			originalUsing = options.position.using;
+
+		if ( !options.useAnimation || !this._isVisible ) {
 			this._super();
 			return;
 		}
 
-		var that = this,
-			originalUsing = this.options.position.using;
-
 		// change position.using mechanism
-		this.options.position.using = function( position, feedback  ) {
+		options.position.using = function( position, feedback  ) {
 			that._animateUsing( position, feedback , content );
 		};
 		this._super();
 		// reset position.using mechanism
-		this.options.position.using = originalUsing;
+		options.position.using = originalUsing;
 	},
 
 	// ARIA helper
@@ -285,17 +264,15 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
 	// all following functions add a variable to determine if the dialog is visible
 	_create: function() {
-		this._oldSize = {};
 		this._super();
 		this._isVisible = false;
-		
-		// rework this to make sure we have only a single call when resized
-		// make dialog responsive
+
+		// make dialog responsive to viewport changes
 		if ( this.options.resizeOnWindowResize ) {
 			this._on( window, this._windowResizeEvent);
 		}
 	},
-	
+
 	_windowResizeEvent: {
 		resize: function( event ){
 			var that = this;
@@ -313,12 +290,10 @@ $.widget( "ui.dialog", $.ui.dialog, {
 					that._isVisible = true;
 				}, 250 );
 			}
-		}	
+		}
 	},
 
-	open: function() {		
-		// overwrite options with recalculated dimensions
-		// $.extend( this.options, this._getSize( this.options ) );
+	open: function() {
 		this._super();
 		this._isVisible = true;
 	},
