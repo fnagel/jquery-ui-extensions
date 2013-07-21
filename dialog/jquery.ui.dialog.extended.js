@@ -12,6 +12,11 @@
 (function( $ ) {
 
 /*
+	TODO
+	Fix moveable and draggable functionality
+*/
+
+/*
  * Option width and height normally set the overall dialog dimensions.
  * This extensions make these options the dimensions of the content pane.
  * This way it's possible to set the real content dimensions.
@@ -66,22 +71,26 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			height: height
 		});
 	},
-
+	
 	_setOption: function( key, value ) {
-		var that = this,
-			options = this.options;
-
+		if ( key === "width" ) {			
+			this._oldSize.width = value;
+		}
+		if ( key === "height" ) {
+			this._oldSize.height = value;
+		}
+			
 		// we need to adjust the size as we need to set the overall dialog size
-		if ( options.useAnimation && options.useContentSize ) {
-			if ( key === "width" ) {
-				value = value + ( that.uiDialog.width() - that.element.width() );
+		if ( this.options.useAnimation && this.options.useContentSize && this._isVisible ) {
+			if ( key === "width" ) {		
+				value = value + ( this.uiDialog.width() - this.element.width() );	
 			}
 			if ( key === "height" ) {
-				value = value + ( that.uiDialog.outerHeight() - that.element.height() );
+				value = value + ( this.uiDialog.outerHeight() - this.element.height() );
 			}
 		}
 
-		this._super( key, value );
+		this._super( key, value );		
 	},
 
 	_getSize: function( data ) {
@@ -103,7 +112,6 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			} else {
 				data = this._calcSize( data, feedback.height, "height", "width" );
 			}
-
 			return data;
 		}
 
@@ -131,7 +139,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 	_size: function() {
 		// overwrite options with recalculated dimensions
 		$.extend( this.options, this._getSize( this.options ) );
-
+		
 		if ( this._isVisible && this.options.useAnimation ) {
 			this._animateSize();
 			return;
@@ -194,10 +202,11 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		if (this.uiDialog.is(":data(ui-resizable)") ) {
 			this.uiDialog.resizable( "option", "minHeight", this._minHeight() );
 		}
-
+		
 		// save calculated overall size
 		options.width = options.width + nonContentWidth;
 		options.height = options.height + nonContentHeight;
+		
 	},
 
 	// Processes the animated positioning (position using callback), works with any width and height options
@@ -266,6 +275,10 @@ $.widget( "ui.dialog", $.ui.dialog, {
 	_create: function() {
 		this._super();
 		this._isVisible = false;
+		this._oldSize = {
+			width: this.options.width,
+			height: this.options.height
+		}
 
 		// make dialog responsive to viewport changes
 		if ( this.options.resizeOnWindowResize ) {
@@ -279,15 +292,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			if ( this._isVisible ) {
 				clearTimeout( this.resizeTimeout );
 				this.resizeTimeout = this._delay( function() {
-					console.log("resized");
-					that._isVisible = false;
-					that._setOptions({
-						width: that.options.width,
-						height: that.options.height
-						// width: that._oldSize.width,
-						// height: that._oldSize.height
-					});
-					that._isVisible = true;
+					that._setOptions( that._oldSize );
 				}, 250 );
 			}
 		}
