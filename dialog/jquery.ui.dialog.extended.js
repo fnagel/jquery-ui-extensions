@@ -131,7 +131,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 	_calcSize: function( data, value, sortBy, toSort ) {
 		var newData = {};
 
-		newData[ toSort ] = ( data[ toSort ] / data[ sortBy ] ) * value;
+		newData[ toSort ] = Math.max( 0, ( data[ toSort ] / data[ sortBy ] ) * value );
 		newData[ sortBy ] = value;
 
 		return newData;
@@ -162,7 +162,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 	_contentSize: function() {
 		// If the user has resized the dialog, the .ui-dialog and .ui-dialog-content
 		// divs will both have width and height set, so we need to reset them
-		var nonContentHeight, nonContentWidth, minContentHeight, maxContentHeight,
+		var nonContentHeight, nonContentWidth, minContentHeight, maxContentHeight, actualSize,
 			options = this.options;
 
 		// Reset content sizing
@@ -185,29 +185,21 @@ $.widget( "ui.dialog", $.ui.dialog, {
 				width: options.width + nonContentWidth
 			})
 			.outerHeight();
-		minContentHeight = Math.max( 0, options.minHeight - nonContentHeight );
-		maxContentHeight = typeof options.maxHeight === "number" ?
-			Math.max( 0, options.maxHeight - nonContentHeight ) :
-			"none";
-
-		if ( options.height === "auto" ) {
-			this.element.css({
-				minHeight: minContentHeight,
-				maxHeight: maxContentHeight,
-				height: "auto"
-			});
-		} else {
-			this.element.height( Math.max( 0, options.height ) );
-		}
-
+			
+		actualSize = this._getSize({
+			width: options.width + nonContentWidth,
+			height: options.height + nonContentHeight
+		});
+		
+		this.uiDialog.css( "width", actualSize.width );		
+		this.element.height( Math.max( 0, actualSize.height - nonContentHeight ) );
+			
 		if (this.uiDialog.is(":data(ui-resizable)") ) {
 			this.uiDialog.resizable( "option", "minHeight", this._minHeight() );
 		}
 		
 		// save calculated overall size
-		options.width = options.width + nonContentWidth;
-		options.height = options.height + nonContentHeight;
-		
+		$.extend( options, actualSize );		
 	},
 
 	// Processes the animated positioning (position using callback), works with any width and height options
@@ -279,7 +271,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		this._oldSize = {
 			width: this.options.width,
 			height: this.options.height
-		}
+		};
 
 		// make dialog responsive to viewport changes
 		this._on( window, this._windowResizeEvents);
@@ -294,7 +286,8 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			}
 		},
 		scroll: function( event ){
-			if ( this.options.scrollWithViewport ) {
+			// prevent inital page load scroll event
+			if ( this.options.scrollWithViewport && this.timeout ) {
 				this._addTimeout( function() {
 					this._position();
 				});
