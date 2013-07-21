@@ -31,6 +31,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		// viewport settings
 		forceFullscreen: false,
 		resizeOnWindowResize: false,
+		scrollWithViewport: false,
 		resizeAccordingToViewport: true,
 		resizeToBestPossibleSize: false,
 
@@ -281,21 +282,31 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		}
 
 		// make dialog responsive to viewport changes
-		if ( this.options.resizeOnWindowResize ) {
-			this._on( window, this._windowResizeEvent);
-		}
+		this._on( window, this._windowResizeEvents);
 	},
 
-	_windowResizeEvent: {
+	_windowResizeEvents: {
 		resize: function( event ){
-			var that = this;
-			if ( this._isVisible ) {
-				clearTimeout( this.resizeTimeout );
-				this.resizeTimeout = this._delay( function() {
-					that._setOptions( that._oldSize );
-				}, 250 );
+			if ( this.options.resizeOnWindowResize ) {
+				this._addTimeout( function() {
+					this._setOptions( this._oldSize );
+				});
+			}
+		},
+		scroll: function( event ){
+			if ( this.options.scrollWithViewport ) {
+				this._addTimeout( function() {
+					this._position();
+				});
 			}
 		}
+	},
+	
+	_addTimeout: function( callback ) {
+		clearTimeout( this.timeout );
+		if ( this._isVisible ) {
+			this.timeout = this._delay( callback, 250 );
+		}	
 	},
 
 	open: function() {
