@@ -28,6 +28,8 @@ $.widget( "ui.dialog", $.ui.dialog, {
 	options: {
 		height: 200, // auto is not allowed when using animation
 
+		closeModalOnClick: true,
+		
 		// viewport settings
 		forceFullscreen: false,
 		resizeOnWindowResize: false,
@@ -274,7 +276,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		};
 
 		// make dialog responsive to viewport changes
-		this._on( window, this._windowResizeEvents);
+		this._on( window, this._windowResizeEvents );
 	},
 
 	_windowResizeEvents: {
@@ -286,7 +288,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			}
 		},
 		scroll: function( event ){
-			// prevent inital page load scroll event
+			// second test prevents initial page load scroll event
 			if ( this.options.scrollWithViewport && this.timeout ) {
 				this._addTimeout( function() {
 					this._position();
@@ -310,6 +312,17 @@ $.widget( "ui.dialog", $.ui.dialog, {
 	close: function() {
 		this._super();
 		this._isVisible = false;
+	},
+	
+	_createOverlay: function(){
+		this._super();
+		if ( this.options.modal && this.options.closeModalOnClick ) {		
+			this._on( this.overlay, {
+				mousedown: function( event ){
+					this.close( event );
+				}
+			});
+		}
 	}
 });
 
