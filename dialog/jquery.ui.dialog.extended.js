@@ -13,7 +13,7 @@
 
 /*
 	TODO
-	Fix moveable and draggable functionality
+	Fix moveable, resizable and draggable functionality
 */
 
 /*
@@ -46,24 +46,25 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			duration: 500,
 			queue: false
 		},
-		loadingContent: "loading...",
 
 		// callbacks
 		resized: null
 	},
 
 	// Changes content and resizes dialog
-	change: function( content, width, height ) {
+	change: function( content, width, height, animate ) {
 		var that = this;
+		
+		if ( typeof animate !== "boolean" ) {
+			animate = this.options.useAnimation;
+		}
 
-		if ( this.options.useAnimation ) {
+		if ( animate ) {
 			this.setAriaLive( true );
-			this.element
-				.html( this.options.loadingContent )
-				.one( this.widgetEventPrefix + "resized", function() {
-					that.element.html( content );
-					that.setAriaLive( false );
-				});
+			this.element.one( this.widgetEventPrefix + "resized", function() {
+				that.element.html( content );
+				that.setAriaLive( false );
+			});
 		} else {
 			this.element.html( content );
 		}

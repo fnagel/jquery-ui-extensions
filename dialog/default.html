@@ -42,12 +42,15 @@
 		});
 
 		setTimeout( function(){
+			$( "#dialog" ).dialog( "change", 'Loading...', 500, 375, false );
 			$( "#dialog" ).dialog( "change", '<img src="../images/dummy-500x375-colorE88801.jpg" alt="changed image" />', 500, 375 );
 		}, 2000 );
 		setTimeout( function(){
+			$( "#dialog" ).dialog( "change", 'Loading...', 800, 600, false );
 			$( "#dialog" ).dialog( "change", '<img src="../images/dummy-800x600-color730046.jpg" alt="changed image" />', 800, 600 );
 		}, 4000 );
 		setTimeout( function(){
+			$( "#dialog" ).dialog( "change", 'Loading...', 454, 280, false );
 			$( "#dialog" ).dialog( "change", '<img src="../images/dummy-454x280-colorFFC200.jpg" alt="image" />', 454, 280 );
 		}, 6000 );
 		/*
