@@ -104,30 +104,29 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		var options = this.options,
 			feedback = $.position.getWithinInfo( options.position.of ),
 			portrait = ( feedback.height >= feedback.width ) ? true : false,
-			fullscreen = {
-				width: feedback.width,
+			viewport = {
+				width: feedback.width - ( this.uiDialog.outerWidth() - this.uiDialog.width() ),
 				height: feedback.height
 			};
 
 		if ( options.forceFullscreen ) {
-			return fullscreen;
+			return viewport;
 		}
 
 		if ( options.resizeToBestPossibleSize ) {
 			if ( portrait ) {
-				data = this._calcSize( data, feedback.height, "height", "width" );
+				data = this._calcSize( data, viewport.width, "width", "height" );
 			} else {
-				data = this._calcSize( data, feedback.height, "height", "width" );
+				data = this._calcSize( data, viewport.height, "height", "width" );
 			}
-			return data;
 		}
 
 		if ( options.resizeAccordingToViewport ) {
-			if ( feedback.width < data.width ) {
-				data = this._calcSize( data, feedback.width, "width", "height" );
+			if ( viewport.width < data.width ) {
+				data = this._calcSize( data, viewport.width, "width", "height" );
 			}
-			if ( feedback.height < data.height ) {
-				data = this._calcSize( data, feedback.height, "height", "width" );
+			if ( viewport.height < data.height ) {
+				data = this._calcSize( data, viewport.height, "height", "width" );
 			}
 		}
 
@@ -212,8 +211,8 @@ $.widget( "ui.dialog", $.ui.dialog, {
 	_animateUsing: function( position, data, content ) {
 		var that = this;
 		// calculate new position based on the viewport
-		position.left = ( data.target.left + ( data.target.width - data.element.width + ( data.element.width - this.options.width ) ) / 2 );
-		position.top = ( data.target.top + ( data.target.height - data.element.height + ( data.element.height - this.options.height ) ) / 2 );
+		position.left = ( data.target.left + ( data.target.width - this.options.width - ( this.uiDialog.outerWidth() - this.uiDialog.width() ) ) / 2 );
+		position.top = ( data.target.top + ( data.target.height - this.options.height ) / 2 );
 		if ( position.top < 0 ) {
 			position.top = 0;
 		}
