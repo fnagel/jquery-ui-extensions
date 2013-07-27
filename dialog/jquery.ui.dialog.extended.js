@@ -53,18 +53,16 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
 	// Changes content and resizes dialog
 	change: function( content, width, height, animate ) {
-		var that = this;
-
 		if ( typeof animate !== "boolean" ) {
 			animate = this.options.useAnimation;
 		}
 
 		if ( animate ) {
 			this.setAriaLive( true );
-			this.element.one( this.widgetEventPrefix + "resized", function() {
-				that.element.html( content );
-				that.setAriaLive( false );
-				that.focusTabbable();
+			this.element.one( this.widgetEventPrefix + "resized", this, function( event ) {
+				event.data.element.html( content );
+				event.data.setAriaLive( false );
+				event.data.focusTabbable();
 			});
 		} else {
 			this.element.html( content );
@@ -213,11 +211,9 @@ $.widget( "ui.dialog", $.ui.dialog, {
 	// Processes the animated positioning (position using callback), works with any width and height options
 	_animateUsing: function( position, data, content ) {
 		var that = this;
-
 		// calculate new position based on the viewport
 		position.left = ( data.target.left + ( data.target.width - data.element.width + ( data.element.width - this.options.width ) ) / 2 );
 		position.top = ( data.target.top + ( data.target.height - data.element.height + ( data.element.height - this.options.height ) ) / 2 );
-
 		if ( position.top < 0 ) {
 			position.top = 0;
 		}
@@ -245,22 +241,17 @@ $.widget( "ui.dialog", $.ui.dialog, {
 
 	// position overwrite for animated positioning
 	_position: function() {
-		var that = this,
-			options = this.options,
-			originalUsing = options.position.using;
-
-		if ( !options.useAnimation || !this._isVisible ) {
-			this._super();
-			return;
-		}
-
+		var that = this;
+		this._positionOptions = this.options.position;
 		// change position.using mechanism
-		options.position.using = function( position, feedback  ) {
-			that._animateUsing( position, feedback , content );
-		};
+		if ( this.options.useAnimation && this._isVisible ) {
+			this.options.position.using = function( position, feedback  ) {
+				that._animateUsing( position, feedback , content );
+			};
+		}
 		this._super();
 		// reset position.using mechanism
-		options.position.using = originalUsing;
+		this.options.position = this._positionOptions;
 	},
 
 	// ARIA helper
@@ -311,11 +302,17 @@ $.widget( "ui.dialog", $.ui.dialog, {
 	},
 
 	_makeResizable: function() {
-		var that = this;
 		this._super();
-		this.element.on( this.widgetEventPrefix + "resizestop", function() {
-			that.element.css( "width", "auto" );
-			that.uiDialog.css( "height", "auto" );
+		this.element.on( this.widgetEventPrefix + "resizestop", this, function( event ) {
+			event.data.element.css( "width", "auto" );
+			event.data.uiDialog.css( "height", "auto" );
+		});
+	},
+
+	_makeDraggable: function() {
+		this._super();
+		this.element.on( this.widgetEventPrefix + "dragstop", this, function( event ) {
+			event.data.options.position = event.data._positionOptions;
 		});
 	},
 
