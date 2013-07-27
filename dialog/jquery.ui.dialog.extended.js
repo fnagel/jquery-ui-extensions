@@ -69,7 +69,11 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			this.element.html( content );
 		}
 
-		// set and change to new size
+		this.changeSize( width, height );
+	},
+	
+	// Changes size
+	changeSize: function( width, height ) {
 		this._setOptions({
 			width: width,
 			height: height
