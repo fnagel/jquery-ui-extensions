@@ -14,11 +14,6 @@
 (function( $ ) {
 
 /*
-	TODO
-	Fix moveable, resizable and draggable functionality
-*/
-
-/*
  * Option width and height normally set the overall dialog dimensions.
  * This extensions make these options the dimensions of the content pane.
  * This way it's possible to set the real content dimensions.
@@ -102,6 +97,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 		this._super( key, value );
 	},
 
+	// calculate actual displayed size, data contains already the overall dimensions
 	_getSize: function( data ) {
 		var options = this.options,
 			feedback = $.position.getWithinInfo( options.position.of ),
