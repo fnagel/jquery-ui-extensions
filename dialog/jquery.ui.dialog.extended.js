@@ -119,7 +119,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 			}
 		}
 
-		if ( options.resizeAccordingToViewport ) {
+		if ( options.resizeAccordingToViewport || options.resizeToBestPossibleSize ) {
 			if ( viewport.width < data.width ) {
 				data = this._calcSize( data, viewport.width, "width", "height" );
 			}
