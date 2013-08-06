@@ -3,74 +3,93 @@
 
 ## jQuery UI Dialog Extended
 
-*Copyright 2013, Felix Nagel (http://www.felixnagel.com)*
-*Dual licensed under the MIT or GPL Version 2 licenses.*
+*Copyright 2013, Felix Nagel (http://www.felixnagel.com)*  
+*Dual licensed under the MIT or GPL Version 2 licenses.*  
 
 
 ### Description
 
 This is an extension for the jQuery UI Dialog widget that adds multiple features and enhancements:
 
-* 
+* Animated resizing and positioning
+* Use content size instead of overall size when using width and height options
+* Multiple viewport settings to make jQuery UI Dialog more flexible and RWD compatible
+
+Useful for custom scripts based upon jQuery UI Dialog or as base for plugins like [MultiDialog](http://fnagel.github.io/MultiDialog/)
 
 
 ### Dependencies
 * jQuery
-* jQuery-ui
-* *	jquery.ui.core.js
-* *	jquery.ui.widget.js
-* *	jquery.ui.dialog.js
+* jQuery UI
+	* jquery.ui.core.js
+	*	jquery.ui.widget.js
+	*	jquery.ui.dialog.js
+
 
 ### Use
 Just add the jquery.ui.dialog.extended.js file. Make sure its included after jQuery UI (and Dialog).
 
 ```javascript
 // Use default way to call methods
-$( "#dialog" ).dialog( "width" );
-$( "#dialog" ).dialog( "width" );
+$( "#dialog" ).dialog( "width", 400 );
+// or use one of the added methods
+$( "#dialog" ).dialog( "changeSize", 400, 200 );
 ```
+
+This extension supports all jQuery UI Dialog options and features, including draggable and resizeable.
+
 
 ### API Documentation
 
-### Available Options
-*(and their default values)*  
+#### Available Options
 The following options are added to the existing options of the dialog widget:
 
-* **maximize:** `false`  
-    Indicates if the dialog should support being maximized.
+* **closeModalOnClick:** `true`
+    Close the dialog when the overlay is clicked.
 
-* **openMaximized:** `false`  
-    Indicates if the dialog should be opened maximized.
+* **forceFullscreen:** `false`
+    Always force the dialog to be maximized. Not ratio aware.
 
-* **maximizeFx:** `{ easing: null, duration: "normal", complete: null }`  
-    Animation options for when the dialog is maximized.
-    * effect - Name of jQuery animation.
-    * duration - Animation duration/speed.
-    * callback - A function to call once the animation is complete.
+* **resizeOnWindowResize:** `false`
+    Resize the dialog when the window is resized. Useful for repsonsive websites.
 
-* **restoreFx:** `{ easing: null, duration: 'normal', complete: null }`  
-    Animation options for when the dialog is restored.
-    * effect - Name of jQuery animation.
-    * duration - Animation duration/speed.
-    * callback - A function to call once the animation is complete.
+* **scrollWithViewport:** `false`
+    Reposition the dialog when the window is scrolled. Useful for repsonsive websites.
 
-### Events
+* **resizeAccordingToViewport:** `true`
+    Resizes the dialog (ratio aware) to fit the viewport. Makes sure the dialog isn't bigger as the viewport. Very useful for image galleries as its guarantees the best possible image size.
+
+* **resizeToBestPossibleSize:** `false`
+    Resizes the dialog (ratio aware) to fit the viewport. Something like a ratio aware fullscreen mode. This could increase the dialog size.
+
+* **useContentSize:** `false`
+    Make dialog's width and height option set the content size, not overall dialog size.
+	
+* **useAnimation:** `true`
+    Use animation for resizing and positioning.
+
+* **animateOptions:** `{ duration: 500, queue: false }`
+    Animation options. See: http://api.jqueryui.com/show/ and http://api.jqueryui.com/hide/
+   
+		
+*Please note: some options work best if you add some CSS to expand your content to full available size.*
+		
+		
+#### Events
 The following events are added to the existing events of the dialog widget:
 
-* **maximized**  
-    Raised when the dialog is maximized.
+* **resized**
+    Called when the dialog is resized.
 
-* **restored**  
-    Raised when the dialog is restored.
-
-### Methods
+	
+#### Methods
 The following methods are added to the existing methods of the dialog widget:
 
-* **maximize()**  
-    Maximizes the dialog. Chainable.
+* **change(content, width, height, animate)** *html, integer, integer, boolean (optional)*
+    Changes content and size of the dialog.
 
-* **restore()**  
-    Restores the dialog to it's original size if it is currently maximized. Chainable.
+* **changeSize(width, height)**
+    Changes the size and width by using _setOptions. A shortcut. Recommended when changing both values.
 
-* **isMaximized()**  
-    Gets a value indicating if the dialog is currently maximized.
+* **setAriaLive(busy)**
+    Helper method to change ARIA live attributes.
