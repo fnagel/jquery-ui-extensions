@@ -1,19 +1,35 @@
-[jQuery UI](http://jqueryui.com/) - Extensions
-================================
-
-This repository is not actively maintained. It works with whatever version of
-jQuery UI is used in the demos. Individual extensions may or may not work with 
-newer version of jQuery UI.
+# [jQuery UI](http://jqueryui.com/) Extensions
 
 
-What is this?
----
-Some script which extend jQuery UI widgets with additional functionality.
+## jQuery UI Seletmenu Popup Style Extension
 
-* [**Selectmenu**](https://github.com/fnagel/jquery-ui-extensions/tree/selectmenu)
-Pop-up style modus for the new Selectmenu widget.
-* [**Dialog**](https://github.com/fnagel/jquery-ui-extensions/tree/dialog)
-Animated resize and positioning for the Dialog widget.
+*Copyright 2013, Felix Nagel (http://www.felixnagel.com)*  
+*Dual licensed under the MIT or GPL Version 2 licenses.*  
 
 
+### Description
 
+This is an extension for the new [jQuery UI Selectmenu Widget](https://github.com/jquery/jquery-ui/tree/selectmenu).
+
+
+### Dependencies
+* jQuery
+* jQuery UI
+	* jquery.ui.core.js
+	* jquery.ui.widget.js
+	* jquery.ui.position.js
+	* jquery.ui.meneu.js
+	* jquery.ui.selectmenu.js
+
+
+### Use
+Just add the jquery.ui.selectmenu.popupStyle.js file and enable `popup` option.
+
+
+### API Documentation
+
+#### Available Options
+The following options are added to the existing options of the dialog widget:
+
+* **popup:** `false`
+    Make the selectmenu menu work like a pop up instead of a dropdown menu.
