@@ -7,6 +7,8 @@
  * http://github.com/fnagel/jquery-ui-extensions
  *
  * Depends:
+ *	jquery.ui.core.js
+ *	jquery.ui.widget.js
  *	jquery.ui.dialog.js
  */
 (function( $ ) {
