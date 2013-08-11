@@ -25,7 +25,7 @@ module.exports = function (grunt) {
 			}
 		},
 		jshint : {	
-			files : ['gruntfile.js', 'dialog/**/*.js'],
+			files : ['gruntfile.js', 'selectmenu/**/*.js'],
 			options : {
 				globals : {
 					jQuery : true

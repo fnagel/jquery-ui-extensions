@@ -1,5 +1,5 @@
 {
-	"name": "ui.selectmenu.popupStyle",
+	"name": "jquery.ui.selectmenu.popupStyle",
 	"title": "jQuery UI Seletmenu Popup Style Extension",
 	"description": "Make the selectmenu menu work like a pop up instead of a dropdown menu.",
 	"version": "0.9.0dev",
