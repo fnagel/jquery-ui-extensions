@@ -25,7 +25,7 @@ $.widget( "ui.selectmenu", $.ui.selectmenu, {
 	_drawMenu: function() {
 		this._super();
 
-		if ( this.options.popup ) {		
+		if ( this.options.popup ) {
 			this.menu.addClass( "ui-corner-all" ).removeClass( "ui-corner-bottom" );
 			this.menuWrap.css( "width", this.buttonText.width() + parseFloat( this.buttonText.css( "padding-left" ) ) || 0 + parseFloat( this.buttonText.css( "margin-left") ) || 0 );
 		}
@@ -35,8 +35,8 @@ $.widget( "ui.selectmenu", $.ui.selectmenu, {
 		if ( !this.options.popup ) {
 			this._super();
 		}
-		
-		currentItem = this._getSelectedItem();
+
+		var currentItem = this._getSelectedItem();
 		// center current item
 		if ( this.menu.outerHeight() < this.menu.prop( "scrollHeight" ) ) {
 			this.menuWrap.css( "left" , -10000 );
