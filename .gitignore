@@ -9,3 +9,4 @@ docs
 .settings
 *.db
 *.session
+*.zip
