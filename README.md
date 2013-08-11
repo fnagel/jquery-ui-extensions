@@ -1,5 +1,6 @@
 # [jQuery UI](http://jqueryui.com/) Extensions
 
+[![Build Status](https://drone.io/github.com/fnagel/jquery-ui-extensions/status.png)](https://drone.io/github.com/fnagel/jquery-ui-extensions/latest)
 
 ## jQuery UI Seletmenu Popup Style Extension
 
