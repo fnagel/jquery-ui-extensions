@@ -1,5 +1,5 @@
 {
-	"name": "ui.dialog.extended",
+	"name": "jquery.ui.dialog.extended",
 	"title": "jQuery UI Dialog Extended",
 	"description": "This is an extension for the jQuery UI Dialog widget that adds multiple features and enhancements: Animated resizing and positioning, use content size instead of overall size when using width and height options, multiple viewport settings to make jQuery UI Dialog more flexible and RWD compatible.",
 	"version": "1.0.0",
