@@ -15,8 +15,8 @@
 
 /*
  * Option width and height normally set the overall dialog dimensions.
- * This extensions make these options the dimensions of the content pane if 
- * option useContentSize is enabled. This way it's possible to set the real 
+ * This extensions make these options the dimensions of the content pane if
+ * option useContentSize is enabled. This way it's possible to set the real
  * content dimensions.
  *
  * Please note you won't get the original size but the calculated overall size
@@ -288,6 +288,8 @@ $.widget( "ui.dialog", $.ui.dialog, {
 				this._addTimeout( function() {
 					this._position();
 				});
+			} else {
+				this.timeout = true;
 			}
 		}
 	},
