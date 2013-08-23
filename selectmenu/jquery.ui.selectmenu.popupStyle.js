@@ -1,7 +1,7 @@
 /*
  * jQuery UI Selectmenu Popup Style Extension
  *
- * Copyright 2012, Felix Nagel (http://www.felixnagel.com)
+ * Copyright 2012-2013, Felix Nagel (http://www.felixnagel.com)
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
  * http://github.com/fnagel/jquery-ui-extensions
