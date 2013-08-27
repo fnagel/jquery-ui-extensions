@@ -275,7 +275,7 @@ $.widget( "ui.dialog", $.ui.dialog, {
 	},
 
 	_windowResizeEvents: {
-		resize: function( event ){
+		resize: function(){
 			if ( this.options.resizeOnWindowResize ) {
 				this._addTimeout( function() {
 					this._setOptions( this._oldSize );
