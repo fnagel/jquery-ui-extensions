@@ -6,10 +6,26 @@
  *
  * http://github.com/fnagel/jquery-ui-extensions
  */
-(function( $ ) {
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
 
-$.widget( "ui.selectmenu", $.ui.selectmenu, {
-	// add option
+		// AMD. Register as an anonymous module.
+		define([
+			"jquery",
+			"jqueryui/ui/core",
+			"jqueryui/ui/widget",
+			"jqueryui/ui/position",
+			"jqueryui/ui/selectmenu"
+		], factory );
+	} else {
+
+		// Browser globals
+		factory( jQuery );
+	}
+}(function( $ ) {
+
+return $.widget( "ui.selectmenu", $.ui.selectmenu, {
+	// add options
 	options: {
 		popup: false
 	},
@@ -60,4 +76,4 @@ $.widget( "ui.selectmenu", $.ui.selectmenu, {
 	}
 });
 
-}( jQuery ));
+}));
