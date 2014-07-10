@@ -27,6 +27,9 @@
 return $.widget( "ui.selectmenu", $.ui.selectmenu, {
 	// add options
 	options: {
+		position: {
+			collision: "fit"
+		},
 		popup: false
 	},
 
