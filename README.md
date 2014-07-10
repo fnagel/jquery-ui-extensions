@@ -4,8 +4,8 @@
 
 ## jQuery UI Seletmenu Popup Style Extension
 
-*Copyright 2013, Felix Nagel (http://www.felixnagel.com)*  
-*Dual licensed under the MIT or GPL Version 2 licenses.*  
+*Copyright 2012-2014, Felix Nagel (http://www.felixnagel.com)*
+*Licensed under the MIT license.*
 
 
 ### Description
@@ -16,15 +16,15 @@ This is an extension for the new [jQuery UI Selectmenu Widget](https://github.co
 ### Dependencies
 * jQuery
 * jQuery UI
-	* jquery.ui.core.js
-	* jquery.ui.widget.js
-	* jquery.ui.position.js
-	* jquery.ui.meneu.js
-	* jquery.ui.selectmenu.js
+	* core.js
+	* widget.js
+	* position.js
+	* meneu.js
+	* selectmenu.js
 
 
 ### Use
-Just add the jquery.ui.selectmenu.popupStyle.js file and enable `popup` option.
+Just add the selectmenu.popup.js file and enable `popup` option.
 
 
 ### API Documentation
