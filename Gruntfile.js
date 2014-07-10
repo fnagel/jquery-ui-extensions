@@ -43,9 +43,13 @@ module.exports = function (grunt) {
 				"node": true,
 				"browser": true,
 				"globals": {
-					"jQuery": true
+					"jQuery": true,
+					"define": true
 				}
 			}
+		},
+		jscs: {
+			files : ["gruntfile.js", "selectmenu/**/*.js"]
 		},
 		compress: {
 			main: {
@@ -69,7 +73,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks("grunt-contrib-concat");
 	grunt.loadNpmTasks("grunt-contrib-compress");
 
-	grunt.registerTask("test", ["jshint"]);
+	grunt.registerTask("test", ["jshint", "jscs"]);
 
 	grunt.registerTask("default", ["jshint", "concat", "uglify", "compress"]);
 
