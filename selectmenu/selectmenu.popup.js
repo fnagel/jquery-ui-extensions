@@ -27,9 +27,6 @@
 return $.widget( "ui.selectmenu", $.ui.selectmenu, {
 	// add options
 	options: {
-		position: {
-			collision: "fit"
-		},
 		popup: false
 	},
 
@@ -65,6 +62,7 @@ return $.widget( "ui.selectmenu", $.ui.selectmenu, {
 		}
 
 		this.menuWrap.position( $.extend( {}, this.options.position, {
+			collision: "fit",
 			of: this.button,
 			my: "left top" + ( this.menu.offset().top  - currentItem.offset().top + ( this.button.outerHeight() - currentItem.outerHeight() ) / 2 ),
 			at: "left top"
