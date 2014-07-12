@@ -53,6 +53,7 @@ return $.widget( "ui.selectmenu", $.ui.selectmenu, {
 	_position: function() {
 		if ( !this.options.popup ) {
 			this._super();
+			return;
 		}
 
 		var currentItem = this._getSelectedItem();
