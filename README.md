@@ -2,18 +2,17 @@
 
 [![Build Status](https://drone.io/github.com/fnagel/jquery-ui-extensions/status.png)](https://drone.io/github.com/fnagel/jquery-ui-extensions/latest)
 
-## jQuery UI Seletmenu Popup Style Extension
+## jQuery UI Seletmenu Extensions
 
 *Copyright 2012-2014, Felix Nagel (http://www.felixnagel.com)*
 *Licensed under the MIT license.*
 
+#### Description
 
-### Description
-
-This is an extension for the new [jQuery UI Selectmenu Widget](https://github.com/jquery/jquery-ui/tree/selectmenu).
+This is a collection of extensions for the new [jQuery UI Selectmenu Widget](https://github.com/jquery/jquery-ui/tree/selectmenu).
 
 
-### Dependencies
+#### Dependencies
 * jQuery
 * jQuery UI
 	* core.js
@@ -22,15 +21,39 @@ This is an extension for the new [jQuery UI Selectmenu Widget](https://github.co
 	* meneu.js
 	* selectmenu.js
 
+	
+	
+### Popup Style
 
-### Use
+
+#### Useage
 Just add the selectmenu.popup.js file and enable `popup` option.
 
 
-### API Documentation
+#### API Documentation
 
-#### Available Options
-The following options are added to the existing options of the dialog widget:
+##### Available Options
+The following options are added to the existing options of the Seldctmenu widget:
 
 * **popup:** `false`
     Make the selectmenu menu work like a pop up instead of a dropdown menu.
+
+	
+	
+### Native Menu 
+
+
+#### Useage
+Just add the selectmenu.native-menu.js file and enable `nativeMenu` option.
+
+
+#### API Documentation
+
+##### Available Options
+The following options are added to the existing options of the Seldctmenu widget:
+
+* **nativeMenu:** `false`
+    Use native select menu instead of the generated menu. 
+	
+	
+*Note* Event callbacks won't work if this extension is enabled.
