@@ -4,8 +4,8 @@
 
 ## jQuery UI Dialog Extended
 
-*Copyright 2013, Felix Nagel (http://www.felixnagel.com)*  
-*Dual licensed under the MIT or GPL Version 2 licenses.*  
+*Copyright 2013-2015, Felix Nagel (http://www.felixnagel.com)*
+*Dual licensed under the MIT or GPL Version 2 licenses.*
 
 
 ### Description
@@ -65,24 +65,24 @@ The following options are added to the existing options of the dialog widget:
 
 * **useContentSize:** `false`
     Make dialog's width and height option set the content size, not overall dialog size.
-	
+
 * **useAnimation:** `true`
     Use animation for resizing and positioning.
 
 * **animateOptions:** `{ duration: 500, queue: false }`
     Animation options. See: http://api.jqueryui.com/show/ and http://api.jqueryui.com/hide/
-   
-		
+
+
 *Please note: some options work best if you add some CSS to expand your content to full available size.*
-		
-		
+
+
 #### Events
 The following events are added to the existing events of the dialog widget:
 
 * **resized**
     Called when the dialog is resized.
 
-	
+
 #### Methods
 The following methods are added to the existing methods of the dialog widget:
 
