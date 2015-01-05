@@ -1,0 +1,7 @@
+.idea
+!dist
+jqueryui
+images
+drone.io
+*.zip
+*.tgz

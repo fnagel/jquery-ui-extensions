@@ -1,15 +1,25 @@
 {
-	"name": "jquery.ui.dialog.extended",
+	"name": "jquery-ui.dialog.extended",
 	"title": "jQuery UI Dialog Extended",
 	"description": "This is an extension for the jQuery UI Dialog widget that adds multiple features and enhancements: Animated resizing and positioning, use content size instead of overall size when using width and height options, multiple viewport settings to make jQuery UI Dialog more flexible and RWD compatible.",
 	"version": "1.0.2",
+	"keywords": [
+		"jquery-plugin",
+		"jquery-ui",
+		"dialog",
+		"rwd",
+		"size"
+	],
 	"author": {
 		"name": "Felix Nagel",
 		"url": "http://www.felixnagel.com"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/fnagel/jquery-ui-extensions.git"
+		"url": "git://github.com/fnagel/jquery-ui-extensions.git#dialog"
+	},
+	"bugs": {
+		"url": "https://github.com/fnagel/jquery-ui-extensions/issues"
 	},
 	"scripts": {
 		"test": "grunt"
@@ -18,11 +28,12 @@
 		"node": ">= 0.8.0"
 	},
 	"devDependencies": {
+		"grunt": "~0.4.1",
 		"grunt-contrib-compress": "~0.5.0",
 		"grunt-contrib-watch": "~0.4.0",
 		"grunt-contrib-jshint": "~0.6.0",
 		"grunt-contrib-concat": "~0.3.0",
-		"grunt-contrib-uglify": "~0.2.0",
-		"grunt": "~0.4.1"
+		"grunt-contrib-clean": "~0.5.0",
+		"grunt-contrib-uglify": "~0.2.0"
 	}
 }

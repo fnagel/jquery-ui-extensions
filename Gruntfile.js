@@ -2,6 +2,18 @@ module.exports = function (grunt) {
 
 	grunt.initConfig({
 		pkg : grunt.file.readJSON("package.json"),
+		clean: {
+			dist: {
+				files: [{
+					dot: true,
+					src: [
+						"dist",
+						"*.zip",
+						"*.tgz"
+					]
+				}]
+			}
+		},
 		concat : {
 			options : {
 				separator : ";",
@@ -67,10 +79,11 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks("grunt-contrib-jshint");
 	grunt.loadNpmTasks("grunt-contrib-watch");
 	grunt.loadNpmTasks("grunt-contrib-concat");
+	grunt.loadNpmTasks("grunt-contrib-clean");
 	grunt.loadNpmTasks("grunt-contrib-compress");
 
 	grunt.registerTask("test", ["jshint"]);
 
-	grunt.registerTask("default", ["jshint", "concat", "uglify", "compress"]);
+	grunt.registerTask("default", ["clean", "jshint", "concat", "uglify", "compress"]);
 
 };
