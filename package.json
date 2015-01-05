@@ -1,15 +1,21 @@
 {
-	"name": "selectmenu.popup",
-	"title": "jQuery UI Seletmenu Popup Style Extension",
-	"description": "Make the selectmenu menu work like a pop up instead of a dropdown menu.",
+	"name": "jquery-ui.selectmenu.extended",
+	"title": "jQuery UI Seletmenu Extensions",
+	"description": "Adds options for pop-up menu or native select menu.",
 	"version": "1.0.1",
+	"keywords": [
+		"jquery-plugin",
+		"selectmenu",
+		"native",
+		"pop-up"
+	],
 	"author": {
 		"name": "Felix Nagel",
 		"url": "http://www.felixnagel.com"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/fnagel/jquery-ui-extensions.git"
+		"url": "git://github.com/fnagel/jquery-ui-extensions.git#selectmenu"
 	},
 	"scripts": {
 		"test": "grunt"
