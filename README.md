@@ -4,7 +4,7 @@
 
 ## jQuery UI Seletmenu Extensions
 
-*Copyright 2012-2014, Felix Nagel (http://www.felixnagel.com)*
+*Copyright 2012-2015, Felix Nagel (http://www.felixnagel.com)*
 *Licensed under the MIT license.*
 
 #### Description
@@ -18,7 +18,7 @@ This is a collection of extensions for the new [jQuery UI Selectmenu Widget](htt
 	* core.js
 	* widget.js
 	* position.js
-	* meneu.js
+	* menu.js
 	* selectmenu.js
 
 	
@@ -56,4 +56,4 @@ The following options are added to the existing options of the Seldctmenu widget
     Use native select menu instead of the generated menu. 
 	
 	
-*Note* Event callbacks won't work if this extension is enabled.
+*Note:* Event callbacks won't work if this extension is enabled.
