@@ -1,0 +1,5 @@
+.idea
+!dist
+jqueryui
+*.zip
+*.tgz
