@@ -41,6 +41,8 @@ return $.widget( "ui.selectmenu", $.ui.selectmenu, {
 				top: 0,
 				opacity: 0.001
 			})
+			.outerWidth( this.button.outerWidth() )
+			.outerHeight( this.button.outerHeight() )
 			.show();
 
 		this.element.appendTo( this.button );
