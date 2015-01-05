@@ -26,7 +26,7 @@ This is a collection of extensions for the new [jQuery UI Selectmenu Widget](htt
 ### Popup Style
 
 
-#### Useage
+#### Usage
 Just add the selectmenu.popup.js file and enable `popup` option.
 
 
@@ -43,7 +43,7 @@ The following options are added to the existing options of the Seldctmenu widget
 ### Native Menu 
 
 
-#### Useage
+#### Usage
 Just add the selectmenu.native-menu.js file and enable `nativeMenu` option.
 
 
