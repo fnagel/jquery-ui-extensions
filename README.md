@@ -23,8 +23,8 @@ Useful for custom scripts based upon jQuery UI Dialog or as base for plugins lik
 * jQuery
 * jQuery UI
 	* jquery.ui.core.js
-	*	jquery.ui.widget.js
-	*	jquery.ui.dialog.js
+	* jquery.ui.widget.js
+	* jquery.ui.dialog.js
 
 
 ### Use
