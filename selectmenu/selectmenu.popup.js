@@ -12,10 +12,10 @@
 		// AMD. Register as an anonymous module.
 		define([
 			"jquery",
-			"jqueryui/ui/core",
-			"jqueryui/ui/widget",
-			"jqueryui/ui/position",
-			"jqueryui/ui/selectmenu"
+			"jquery-ui/core",
+			"jquery-ui/widget",
+			"jquery-ui/position",
+			"jquery-ui/selectmenu"
 		], factory );
 	} else {
 
