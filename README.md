@@ -39,6 +39,7 @@ $( "#dialog" ).dialog( "changeSize", 400, 200 );
 
 This extension supports all jQuery UI Dialog options and features, including draggable and resizeable.
 
+Please note: Dialog option resizable is currently broken.
 
 ### API Documentation
 
